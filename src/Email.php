@@ -37,6 +37,7 @@ class Email
             $imapError = imap_last_error();
             throw new \Exception("Error Connecting: $imapError");
         }
+
         return $connection;
     }
 
@@ -59,31 +60,37 @@ class Email
         $connected = $this->connect();
         $rawEmail = [];
         $results = [];
+        $finalResults = [];
 
         for ($i = 1; $i <= $this->getEmailQty(); $i++) {
             $rawEmail[] = imap_fetchbody($connected, $i, 0);
         }
 
         foreach ($rawEmail as $email) {
-
             preg_match_all("/(^[A-Z].+):([ ]+[\S ]*)/m", $email, $results);
         };
         $results = array_combine($results[1], $results[2]);
 
-        unset($results['X-Received']);
-        unset($results['ARC-Seal']);
-        unset($results['ARC-Message-Signature']);
-        unset($results['ARC-Authentication-Results']);
-        unset($results['Authentication-Results']);
-        unset($results['Authentication-Results']);
-        unset($results['DKIM-Signature']);
-        unset($results['X-Gm-Message-State']);
-        unset($results['X-Google-Smtp-Source']);
-        unset($results['X-Google-Sender-Auth']);
-        unset($results['Message-ID']);
+        $displayValuesArr = [
+            "Delivered-To",
+            "Received",
+            "Return-Path",
+            "Sender",
+            "From",
+            "Date",
+            "Subject",
+            "To",
+            "Content-Type"
+        ];
 
-        return $results;
-
+        foreach ($results as $k => $v) {
+            foreach ($displayValuesArr as $displayTitle => $displayValue) {
+                if ($k == $displayValue) {
+                    $finalResults[$k] = $v;
+                }
+            }
+        }
+        return $finalResults;
     }
 
 }

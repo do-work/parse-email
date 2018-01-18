@@ -12,7 +12,7 @@ use Email\Email;
 **/
 
 try {
-    $gmail = new Email("{imap.gmail.com:993/ssl}INBOX", "email","password");
+    $gmail = new Email("{imap.gmail.com:993/ssl}INBOX", "username","password");
     print_r($gmail->getRawEmail());
 } catch (Exception $e) {
     error_log("Error Connecting:" . $e->getMessage());
