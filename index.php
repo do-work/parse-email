@@ -9,10 +9,10 @@ use Email\Email;
  * example: {imap.gmail.com:993/ssl}INBOX
  *
  * email - just username. No need for @gmail.com
-**/
+ **/
 
 try {
-    $gmail = new Email("{imap.gmail.com:993/ssl}INBOX", "dowork87775","thisisatestemailforwork");
+    $gmail = new Email("{imap.gmail.com:993/ssl}INBOX", "username", "password");
     print_r($gmail->getDisplayValues());
 } catch (Exception $e) {
     error_log("Error Connecting:" . $e->getMessage());

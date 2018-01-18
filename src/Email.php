@@ -49,6 +49,7 @@ class Email
         return $info->Nmsgs;
     }
 
+
     /**
      * @return array
      */
@@ -75,12 +76,16 @@ class Email
             $rawEmail[] = imap_fetchbody($connected, $i, 0);
         }
 
-        foreach ($rawEmail as $email) {
-            preg_match_all("/(^[A-Z].+):([ ]+[\S ]*)/m", $email, $bodyResults);
-            $bodyResults = array_combine($bodyResults[1], $bodyResults[2]);
-            $allEmailDisplayValues = array_intersect_key($bodyResults, array_flip($displayValuesArr));
+        for ($i = 0; $i <= count($rawEmail) - 1; $i++) {
+            preg_match_all("/(^[A-Z].+):([ ]+[\S ]*)/m", $rawEmail[$i], $bodyResults);
+            $newArr[] = array_combine($bodyResults[1], $bodyResults[2]);
+            $allEmailDisplayValues[] = array_intersect_key($newArr[$i], array_flip($displayValuesArr));
+
         }
 
         return $allEmailDisplayValues;
     }
+
+
+
 }
