@@ -12,8 +12,13 @@ Tested with gmail successfully.
  Next Steps:
  
  -save common email client configuration and allow more simple input, such as "google, yahoo, etc" - validate this input, and throw exceptions for any unknowns
+ 
  -check mailboxes other than Inbox
+ 
  -specify how many recent emails data to pull
+ 
  -MIME types to seperate out images and/or attachments
+ 
  -pull more info such as message size
+ 
  -sort based on input such as size, date, etc
