@@ -1,0 +1,17 @@
+{
+  "name": "root/parse-email",
+  "description": "parse email",
+  "type": "project",
+  "authors": [
+    {
+      "name": "David Olson",
+      "email": "david@deolson.com"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Email\\": "src/"
+    }
+  }
+}
