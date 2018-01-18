@@ -4,7 +4,6 @@ namespace Email;
 
 class Email
 {
-
     private $account;
     private $username;
     private $password;
@@ -24,7 +23,6 @@ class Email
         $this->username = $username;
         $this->password = $password;
     }
-
 
     /**
      * @return resource
@@ -54,23 +52,12 @@ class Email
     /**
      * @return array
      */
-    public function getRawEmail()
+    public function getDisplayValues()
     {
         //todo - add input for how many emails to check
         $connected = $this->connect();
         $rawEmail = [];
-        $results = [];
-        $finalResults = [];
-
-        for ($i = 1; $i <= $this->getEmailQty(); $i++) {
-            $rawEmail[] = imap_fetchbody($connected, $i, 0);
-        }
-
-        foreach ($rawEmail as $email) {
-            preg_match_all("/(^[A-Z].+):([ ]+[\S ]*)/m", $email, $results);
-        };
-        $results = array_combine($results[1], $results[2]);
-
+        $bodyResults = [];
         $displayValuesArr = [
             "Delivered-To",
             "Received",
@@ -82,15 +69,18 @@ class Email
             "To",
             "Content-Type"
         ];
+        $allEmailDisplayValues = [];
 
-        foreach ($results as $k => $v) {
-            foreach ($displayValuesArr as $displayTitle => $displayValue) {
-                if ($k == $displayValue) {
-                    $finalResults[$k] = $v;
-                }
-            }
+        for ($i = 1; $i <= $this->getEmailQty(); $i++) {
+            $rawEmail[] = imap_fetchbody($connected, $i, 0);
         }
-        return $finalResults;
-    }
 
+        foreach ($rawEmail as $email) {
+            preg_match_all("/(^[A-Z].+):([ ]+[\S ]*)/m", $email, $bodyResults);
+            $bodyResults = array_combine($bodyResults[1], $bodyResults[2]);
+            $allEmailDisplayValues = array_intersect_key($bodyResults, array_flip($displayValuesArr));
+        }
+
+        return $allEmailDisplayValues;
+    }
 }
