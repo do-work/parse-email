@@ -5,10 +5,9 @@ namespace Email;
 class Email
 {
 
-    public $account;
-    public $username;
-    public $password;
-    public $link;
+    private $account;
+    private $username;
+    private $password;
 
     /**
      * Email constructor.
@@ -26,16 +25,19 @@ class Email
         $this->password = $password;
     }
 
+
     /**
-     *
+     * @return resource
+     * @throws \Exception
      */
-    public function connect()
+    private function connect()
     {
-        $connection = $this->link = imap_open($this->account, $this->username, $this->password);
+        $connection = imap_open($this->account, $this->username, $this->password);
         if ($connection == false) {
-            $e = imap_last_error();
-            error_log("Error Connecting: $e");
+            $imapError = imap_last_error();
+            throw new \Exception("Error Connecting: $imapError");
         }
+        return $connection;
     }
 
     /**
@@ -43,7 +45,7 @@ class Email
      */
     public function getEmailQty()
     {
-        $info = imap_check($this->link);
+        $info = imap_check($this->connect());
 
         return $info->Nmsgs;
     }
@@ -54,7 +56,7 @@ class Email
     public function getRawEmail()
     {
         //todo - add input for how many emails to check
-        $connected = $this->link;
+        $connected = $this->connect();
         $rawEmail = [];
         $results = [];
 

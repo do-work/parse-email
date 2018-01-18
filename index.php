@@ -3,6 +3,17 @@ require "vendor/autoload.php";
 
 use Email\Email;
 
-$gmail = new Email("{imap.gmail.com:993/ssl}INBOX", "dowork87775", "thisisatestemailforwork");
-$gmail->connect();
-print_r($gmail->getRawEmail());
+/**
+ * gmail settings for imap, though this needs to be turned on within gmail:
+ * imap.gmail.com:993
+ * example: {imap.gmail.com:993/ssl}INBOX
+ *
+ * email - just username. No need for @gmail.com
+**/
+
+try {
+    $gmail = new Email("{imap.gmail.com:993/ssl}INBOX", "email","password");
+    print_r($gmail->getRawEmail());
+} catch (Exception $e) {
+    error_log("Error Connecting:" . $e->getMessage());
+}
